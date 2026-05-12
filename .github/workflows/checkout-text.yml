@@ -1,0 +1,17 @@
+name: Checkout-Test
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  checkout-vergleich:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ohne Checkout, sollte scheitern
+        continue-on-error: true
+        run: cat hallot.txt
+      - name: Code holen
+        uses: actions/checkout@v4
+      - name: Mit Checkout, funktioniert
+        run: cat hallot.txt
