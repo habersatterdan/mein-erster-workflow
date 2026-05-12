@@ -1,0 +1,34 @@
+name: Artefakte zwischen Jobs
+
+on:
+  push:
+  workflow_dispatch:
+jobs:
+  bauen:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Datei erzeugen
+        run: |
+          mkdir -p output
+          echo "Build von SHA ${{ github.sha }}" > output/build.txt
+          echo "Inhalt im Build-Job:"
+          cat output/build.txt
+      - name: Artefakt hochladen
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-output
+          path: output/
+  verwenden:
+    runs-on: ubuntu-latest
+    needs: bauen
+    steps:
+      - name: Ohne Download lesen (soll scheitern)
+        continue-on-error: true
+        run: cat output/build.txt
+      - name: Artefakt herunterladen
+        uses: actions/download-artifact@v4
+        with:
+          name: build-output
+          path: output/
+      - name: Mit Download lesen (funktioniert)
+        run: cat output/build.txt
