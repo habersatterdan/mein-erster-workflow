@@ -1,0 +1,21 @@
+name: Matrix-Build
+
+on:
+  push:
+  workflow_dispatch:
+jobs:
+  python-versionen:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python: ["3.11", "3.12", "3.13"]
+    steps:
+      - name: Python installieren
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Version prüfen
+        run: python --version
+
+      - name: Eigenes Echo
+        run: echo "Läuft auf Python ${{ matrix.python }}"
